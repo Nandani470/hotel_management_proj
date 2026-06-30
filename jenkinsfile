@@ -1,1 +1,37 @@
-hii
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Check Python') {
+            steps {
+                sh '''
+                    python3 --version
+                    pip3 --version
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    python3 -m pip install --break-system-packages -r requirements.txt
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build Successful!'
+        }
+        failure {
+            echo 'Build Failed!'
+        }
+    }
+}
